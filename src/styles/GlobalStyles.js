@@ -19,6 +19,9 @@ a {
 	color: inherit;
   }
 body {
+	display: grid;
+    place-items: center;
+    min-height: 100vh;
 	margin: 0;
     max-width: 1440px;
     margin-left: auto;

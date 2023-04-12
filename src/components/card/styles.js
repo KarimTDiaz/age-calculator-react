@@ -1,8 +1,7 @@
 import styled from 'styled-components';
 
 const CardContainer = styled.div`
-	width: 350px;
-
+	width: 400px;
 	padding: 48px 24px;
 	margin-left: auto;
 	margin-right: auto;
@@ -12,7 +11,16 @@ const CardContainer = styled.div`
 const FormContainer = styled.div`
 	display: flex;
 	gap: 1rem;
-	margin-bottom: 1rem;
+	position: relative;
+	margin-bottom: 2rem;
+	&::after {
+		content: '';
+		position: absolute;
+		bottom: -70px;
+		height: 1px;
+		width: 100%;
+		background-color: grey;
+	}
 `;
 const StyledFormField = styled.div``;
 
@@ -25,9 +33,21 @@ const FormInput = styled.input`
 
 const Info = styled.p`
 	font-size: 3.5rem;
+	font-weight: 800;
+	font-style: italic;
+`;
+
+const InfoNumber = styled.span`
+	display: inline-block;
+	width: 75px;
+	font-size: 3.5rem;
+	font-weight: 800;
+	font-style: italic;
+	color: #854dff;
 `;
 const ArrowButton = styled.div`
 	display: flex;
+	position: relative;
 	margin-left: auto;
 	margin-right: auto;
 	width: 80px;
@@ -43,5 +63,6 @@ export {
 	FormContainer,
 	CardContainer,
 	Info,
-	ArrowButton
+	ArrowButton,
+	InfoNumber
 };
