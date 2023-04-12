@@ -9,22 +9,23 @@ import {
 	ArrowButton
 } from './styles';
 
-const date = new Date();
-const getMonth = date.getMonth();
-const getFullYear = date.getFullYear();
-const getDay = date.getDate();
-
 const Card = () => {
-	const [month, setMonth] = useState(getMonth);
-	const [year, setYear] = useState(getFullYear);
-	const [day, setDay] = useState(getDay);
+	const [month, setMonth] = useState();
+	const [year, setYear] = useState();
+	const [day, setDay] = useState();
+	const [print, setPrint] = useState(false);
+	const [date, setDate] = useState({
+		month: 0,
+		day: 0,
+		year: 0
+	});
 
 	return (
 		<CardContainer>
 			<FormContainer>
 				<StyledFormField>
 					<FormLabel>DAY</FormLabel>
-					<FormInput onChange={ev => setDay(ev.target.value)}></FormInput>
+					<FormInput onChange={inputValue}></FormInput>
 				</StyledFormField>
 				<StyledFormField>
 					<FormLabel>MONTH</FormLabel>
@@ -35,19 +36,63 @@ const Card = () => {
 					<FormInput onChange={ev => setYear(ev.target.value)}></FormInput>
 				</StyledFormField>
 			</FormContainer>
-			<ArrowButton onClick={() => setDate(day, month, year)}>
+			<ArrowButton
+				onClick={() => {
+					dateToPrint(month, setMonth, day, setDay, year, setYear);
+					setPrint(!print);
+				}}
+			>
 				<img src='/public/icon-arrow.svg' alt='' />
 			</ArrowButton>
-			<Info>{year} YEARS</Info>
-			<Info>{month} MONTHS</Info>
-			<Info>{day} DAYS</Info>
+			<Info>{print ? year : '0'} YEARS</Info>
+			<Info>{print ? month : '0'} MONTHS</Info>
+			<Info>{print ? day : '0'} DAYS</Info>
 		</CardContainer>
 	);
 };
 
-const setDate = (day, month, year) => {
-	const customDate = new Date(day, month, year);
-	console.log(customDate);
+const convertDays = days => {
+	const years = Math.floor(days / 365);
+	days = days % 365;
+	let months = Math.floor(days / 30);
+	days = days % 30;
+
+	const dateTemp = new Date();
+	dateTemp.setDate(dateTemp.getDate() + days);
+	const lastDayOfMonth = new Date(
+		dateTemp.getFullYear(),
+		dateTemp.getMonth() + 1,
+		0
+	).getDate();
+	if (days > lastDayOfMonth) {
+		days -= lastDayOfMonth;
+		months++;
+	}
+
+	return { years, months, days };
 };
 
+const diferenceBetweenDates = (now, birthday) => {
+	const milisecondsPerDay = 86400000;
+	const milisecondsBetweenDays = now - birthday;
+	const diferenceInDays = Math.floor(
+		milisecondsBetweenDays / milisecondsPerDay
+	);
+
+	return diferenceInDays;
+};
+
+const dateToPrint = (month, setMonth, day, setDay, year, setYear) => {
+	const birthday = new Date(`${month}/${day}/${year}`);
+	const now = new Date();
+	const totalDays = diferenceBetweenDates(now, birthday);
+	const totalTime = convertDays(totalDays);
+	setDay(totalTime.days);
+	setMonth(totalTime.months);
+	setYear(totalTime.years);
+};
+
+const inputValue = (typeOfDate, value) => {
+	setDate(`{${typeOfDate}: ${value}}`);
+};
 export default Card;
